@@ -43,7 +43,7 @@ jobs:
         env:
           SETLISTFM_API_KEY: ${{ secrets.SETLISTFM_API_KEY }}
         run: |
-          python scripts/build_site.py --output site-build
+          python scripts/build_site.py --output site-build/index.html
 
       - name: Configurer GitHub Pages
         uses: actions/configure-pages@v5
