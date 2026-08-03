@@ -135,12 +135,24 @@ class SetlistFmClient:
             except urllib.error.HTTPError as exc:
                 self._last_request = time.monotonic()
                 last_error = exc
+
+                # setlist.fm renvoie 404 lorsqu'une recherche ne contient aucun résultat.
+                if exc.code == 404 and path == "/search/setlists":
+                    log(f"Aucun résultat setlist.fm pour {url}")
+                    return {
+                        "setlist": [],
+                        "total": 0,
+                        "page": 1,
+                        "itemsPerPage": 20,
+                    }
+
                 if exc.code == 429 or 500 <= exc.code < 600:
                     retry_after = exc.headers.get("Retry-After")
                     delay = float(retry_after) if retry_after and retry_after.isdigit() else min(2 ** attempt, 20)
                     log(f"API HTTP {exc.code}; nouvelle tentative dans {delay:.0f}s")
                     time.sleep(delay)
                     continue
+
                 raise RuntimeError(f"Erreur API setlist.fm HTTP {exc.code} sur {url}") from exc
             except (urllib.error.URLError, TimeoutError, json.JSONDecodeError) as exc:
                 self._last_request = time.monotonic()
