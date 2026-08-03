@@ -89,7 +89,7 @@ def ensure_attribution(text: str) -> str:
     marker = "<!-- setlist.fm attribution injected by build_site.py -->"
     if marker not in text:
         old = '<div class="footer-note">\n  Outil généré pour exploration personnelle et recoupements — non affilié au groupe The Cure.\n</div>'
-        new = '''<div class="footer-note">\n  Outil généré pour exploration personnelle et recoupements — non affilié au groupe The Cure.<br>\n  <span class="api-attribution">Données récentes synchronisées via <a href="https://www.setlist.fm/" target="_blank" rel="noopener">setlist.fm</a>.</span>\n</div>\n<!-- setlist.fm attribution injected by build_site.py -->'''
+        new = '''<div class="footer-note">\n  Outil généré pour exploration personnelle et recoupements — non affilié au groupe The Cure.<br>\n  <span class="api-attribution">Données récentes synchronisées via <a href="https://www.setlist.fm/" target="_blank" rel="noopener">setlist.fm</a>.</span><br>\n  <span style="display:inline-block;margin-top:10px;font-size:12px;opacity:.72;letter-spacing:.02em;">Made with ♥ by Chris</span>\n</div>\n<!-- setlist.fm attribution injected by build_site.py -->'''
         if old in text:
             text = text.replace(old, new, 1)
         else:
