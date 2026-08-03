@@ -27,7 +27,7 @@ import urllib.request
 from pathlib import Path
 from typing import Any, Iterable
 
-API_ROOT = "https://api.setlist.fm/1.0"
+API_ROOT = "https://api.setlist.fm/rest/1.0"
 THE_CURE_MBID = "69ee3720-a7cb-4402-b48d-a02c366f2bcf"
 DATA_RE = re.compile(
     r'(<script\s+id=["\']data-concerts["\']\s+type=["\']application/json["\']>)(.*?)(</script>)',
