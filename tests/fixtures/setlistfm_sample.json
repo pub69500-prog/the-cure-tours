@@ -1,0 +1,23 @@
+{
+  "setlist": [
+    {
+      "id": "test123",
+      "versionId": "version456",
+      "eventDate": "26-07-2026",
+      "lastUpdated": "2026-07-28T11:49:11.000+0000",
+      "url": "https://www.setlist.fm/setlist/the-cure/2026/arenes-de-nimes-nimes-france-test123.html",
+      "tour": {"name": "Festival Summer 2026"},
+      "venue": {
+        "name": "Arènes de Nîmes",
+        "city": {"name": "Nîmes", "country": {"code": "FR", "name": "France"}}
+      },
+      "sets": {
+        "set": [
+          {"song": [{"name": "Alone"}, {"name": "Pictures of You"}]},
+          {"encore": 1, "song": [{"name": "Faith"}]},
+          {"encore": 2, "song": [{"name": "Boys Don't Cry"}]}
+        ]
+      }
+    }
+  ]
+}
