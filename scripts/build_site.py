@@ -89,8 +89,7 @@ def ensure_attribution(text: str) -> str:
     marker = "<!-- setlist.fm attribution injected by build_site.py -->"
     if marker not in text:
         old = '<div class="footer-note">\n  Outil généré pour exploration personnelle et recoupements — non affilié au groupe The Cure.\n</div>'
-        new = '''<div class="footer-note">\n  Outil personnel — non affilié à The Cure.<br>\n  <span class="api-attribution">Données récentes via <a href="https://www.setlist.fm/" target="_blank" rel="noopener">setlist.fm</a> · Made with ♥ by Chris</span>\n</div>\n<!-- setlist.fm attribution injected by build_site.py -->'''
-        if old in text:
+        new = '''<div class="footer-note">\n  Outil personnel — non affilié à The Cure.<br>\n  <span class="api-attribution">Données récentes via <a href="https://www.setlist.fm/" target="_blank" rel="noopener">setlist.fm</a>.</span>\n  <div style="margin-top:14px;font-size:12px;opacity:.65;letter-spacing:.04em;">Made with ♥ by Chris</div>\n</div>\n<!-- setlist.fm attribution injected by build_site.py -->'''
             text = text.replace(old, new, 1)
         else:
             # Fallback : insertion avant la modale.
