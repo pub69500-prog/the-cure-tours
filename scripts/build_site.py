@@ -85,25 +85,19 @@ def inject_concerts(text: str, concerts: list[dict[str, Any]]) -> str:
 
 
 def apply_branding(text: str) -> str:
-    """Adapte le titre du site sans modifier ses fonctionnalités."""
-
-    # Supprime la mention sous la bannière.
+    """Adapte le branding du site sans modifier ses fonctionnalités."""
     text = re.sub(
         r'<[^>]+>\s*Archive\s+livre\s*(?:[·\-–—]\s*)?base\s+V2\s*</[^>]+>',
         '',
         text,
         flags=re.IGNORECASE,
     )
-
-    # Fallback si le texte n'est pas seul dans une balise.
     text = re.sub(
         r'Archive\s+livre\s*(?:[·\-–—]\s*)?base\s+V2',
         '',
         text,
         flags=re.IGNORECASE,
     )
-
-    # Remplace le titre existant.
     text = re.sub(
         r'Archive\s+des\s*(?:<br\s*/?>\s*)?Concerts',
         'STATICURE',
@@ -122,72 +116,36 @@ def apply_branding(text: str) -> str:
 }
 </style>
 """
-
     if 'id="staticure-branding"' not in text:
         text = text.replace("</head>", branding_css + "\n</head>", 1)
-
     return text
 
 
 def ensure_attribution(text: str) -> str:
-
-    # Supprime la mention sous la bannière.
-    text = re.sub(
-        r'<[^>]+>\s*Archive\s+livre\s*(?:[·\-–—]\s*)?base\s+V2\s*</[^>]+>',
-        '',
-        text,
-        flags=re.IGNORECASE,
-    )
-
-    # Fallback si le texte n'est pas seul dans une balise.
-    text = re.sub(
-        r'Archive\s+livre\s*(?:[·\-–—]\s*)?base\s+V2',
-        '',
-        text,
-        flags=re.IGNORECASE,
-    )
-
-    # Remplace le titre existant.
-    text = re.sub(
-        r'Archive\s+des\s*(?:<br\s*/?>\s*)?Concerts',
-        'STATICURE',
-        text,
-        flags=re.IGNORECASE,
-    )
-
-    # Style spécifique du nouveau titre.
-    branding_css = """
-<style id="staticure-branding">
-.hero h1 {
-    text-align: center !important;
-    width: 100% !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-    letter-spacing: .08em !important;
-}
-</style>
-"""
-
-    if 'id="staticure-branding"' not in text:
-        text = text.replace("</head>", branding_css + "\n</head>", 1)
-
-    return text
-    """Ajoute une attribution globale et une source dans la modale, sans changer les fonctions du site."""
+    """Ajoute l'attribution setlist.fm et la signature du site."""
     marker = "<!-- setlist.fm attribution injected by build_site.py -->"
     if marker not in text:
         old = '<div class="footer-note">\n  Outil généré pour exploration personnelle et recoupements — non affilié au groupe The Cure.\n</div>'
-        new = '''<div class="footer-note">\n  Outil personnel — non affilié à The Cure.<br>\n  <span class="api-attribution">Données récentes via <a href="https://www.setlist.fm/" target="_blank" rel="noopener">setlist.fm</a>.</span>\n  <div style="margin-top:14px;font-size:12px;opacity:.65;letter-spacing:.04em;">Made with ♥ by Chris</div>\n</div>\n<!-- setlist.fm attribution injected by build_site.py -->'''
+        new = """<div class="footer-note">
+  Outil personnel — non affilié à The Cure.<br>
+  <span class="api-attribution">Données récentes via <a href="https://www.setlist.fm/" target="_blank" rel="noopener">setlist.fm</a>.</span>
+  <div style="margin-top:14px;font-size:12px;opacity:.65;letter-spacing:.04em;">Made with ♥ by Chris</div>
+</div>
+<!-- setlist.fm attribution injected by build_site.py -->"""
+        if old in text:
             text = text.replace(old, new, 1)
         else:
-            # Fallback : insertion avant la modale.
-            text = text.replace('<!-- ============ TICKET MODAL ============ -->', new + '\n\n<!-- ============ TICKET MODAL ============ -->', 1)
+            text = text.replace(
+                '<!-- ============ TICKET MODAL ============ -->',
+                new + '\n\n<!-- ============ TICKET MODAL ============ -->',
+                1,
+            )
 
     old_js = "document.getElementById('ticket-foot').innerHTML = `${esc(c.address)||''}`;"
     new_js = """document.getElementById('ticket-foot').innerHTML = `${esc(c.address)||''}${c.setlistFmUrl ? `${c.address ? '<br>' : ''}<span class=\"api-source\">Source : <a href=\"${esc(c.setlistFmUrl)}\" target=\"_blank\" rel=\"noopener\">setlist.fm</a></span>` : ''}`;"""
     if old_js in text:
         text = text.replace(old_js, new_js, 1)
     return text
-
 
 class SetlistFmClient:
     def __init__(self, api_key: str, min_interval: float = 0.60, timeout: float = 25.0):
