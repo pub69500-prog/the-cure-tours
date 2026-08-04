@@ -84,9 +84,52 @@ def inject_concerts(text: str, concerts: list[dict[str, Any]]) -> str:
     return replaced
 
 
-def ensure_attribution(text: str) -> str:
-    def apply_branding(text: str) -> str:
+def apply_branding(text: str) -> str:
     """Adapte le titre du site sans modifier ses fonctionnalités."""
+
+    # Supprime la mention sous la bannière.
+    text = re.sub(
+        r'<[^>]+>\s*Archive\s+livre\s*(?:[·\-–—]\s*)?base\s+V2\s*</[^>]+>',
+        '',
+        text,
+        flags=re.IGNORECASE,
+    )
+
+    # Fallback si le texte n'est pas seul dans une balise.
+    text = re.sub(
+        r'Archive\s+livre\s*(?:[·\-–—]\s*)?base\s+V2',
+        '',
+        text,
+        flags=re.IGNORECASE,
+    )
+
+    # Remplace le titre existant.
+    text = re.sub(
+        r'Archive\s+des\s*(?:<br\s*/?>\s*)?Concerts',
+        'STATICURE',
+        text,
+        flags=re.IGNORECASE,
+    )
+
+    branding_css = """
+<style id="staticure-branding">
+.hero h1 {
+    text-align: center !important;
+    width: 100% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    letter-spacing: .08em !important;
+}
+</style>
+"""
+
+    if 'id="staticure-branding"' not in text:
+        text = text.replace("</head>", branding_css + "\n</head>", 1)
+
+    return text
+
+
+def ensure_attribution(text: str) -> str:
 
     # Supprime la mention sous la bannière.
     text = re.sub(
